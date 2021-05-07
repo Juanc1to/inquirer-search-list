@@ -54,6 +54,11 @@ class SearchBox extends Base {
 		this.filterList = this.list = choices
 			.filter(() => true) // fix slice is not a function
 			.map((item, id) => ({ ...item, id }));
+		// init default value
+		const index = this.filterList.findIndex(e => {
+			return e.name === this.opt.default;
+		});
+		this.pointer = index > -1 ? index : 0;
 	}
 
 	render(error?: string) {

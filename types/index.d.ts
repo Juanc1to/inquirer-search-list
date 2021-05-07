@@ -7,6 +7,7 @@ declare module "inquirer/lib/prompts/base" {
 		opt: {
 			choices: Base.Item[];
 			pageSize: number;
+			default: string;
 		};
 		rl: {
 			line: string;
