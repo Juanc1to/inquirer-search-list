@@ -1,5 +1,11 @@
 # inquirer-search-list
 
+forked from [robin-rpr/inquirer-search-list](https://github.com/robin-rpr/inquirer-search-list)
+
+新增功能：
+1. 可以通过`default`指定初始化默认选中值;
+2. 支持不匹配时，自定义输入值;
+
 ![](preview.gif)
 
 ### Install
