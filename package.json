@@ -1,7 +1,7 @@
 {
-  "name": "inquirer-search-list",
-  "version": "1.2.6",
-  "description": "Searchable Inquirer list",
+  "name": "@elfiner/inquirer-search-list",
+  "version": "1.2.7",
+  "description": "Elfin Searchable Inquirer list",
   "main": "dist/index.js",
   "scripts": {
     "start": "tsc -w",
