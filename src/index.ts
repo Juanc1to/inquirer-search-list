@@ -42,6 +42,7 @@ class SearchBox extends Base {
   private list: Item[] = [];
   private filterList: Item[] = [];
   private paginator: Paginator = new Paginator();
+	private userInput: string | undefined = '';
 
   constructor(...params: any[]) {
     super(...params);
@@ -89,6 +90,8 @@ class SearchBox extends Base {
     };
 
     this.filterList = fuzzy.filter(this.rl.line, this.list, options).map((el) => el.original);
+		// 记录输入值
+		this.userInput = this.rl.line;
   }
 
   onDownKey() {
@@ -132,9 +135,8 @@ class SearchBox extends Base {
   getCurrentItem() {
     if (this.filterList.length) {
       return this.filterList[this.pointer];
-    } else {
-      return this.list[this.pointer];
     }
+		return { value: this.userInput, name: this.userInput, short: this.userInput, disabled: false };
   }
 
   getCurrentItemValue() {

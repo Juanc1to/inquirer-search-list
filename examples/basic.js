@@ -10,7 +10,7 @@ inquirer
             type: "search-list",
             message: "Select topping",
             name: "topping",
-            choices: ["Pepperoni", "Ham", "Ground Meat", "Bacon", "Mozzarella", "Bottle"],
+            choices: ["Hame", "Ham", "Ground Meat", "Bacon", "Mozzarella", "Bottle"],
             validate: function(answer) {
                 if (answer === 'Bottle') {
                     return `Whoops, ${answer} is not a real topping.`;
