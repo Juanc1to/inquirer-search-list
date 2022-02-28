@@ -7,16 +7,18 @@ forked from [robin-rpr/inquirer-search-list](https://github.com/robin-rpr/inquir
 2. 支持不匹配时，可以自定义输入值;
 
 ### Overview
-1. [Install Guide](#install)
-2. [Usage](#usage)
-3. [Take a look at Examples](#examples)
+- [inquirer-search-list](#inquirer-search-list)
+    - [Overview](#overview)
+    - [Install](#install)
+    - [Usage](#usage)
+    - [Examples](#examples)
 
 ![](preview.gif)
 
 ### Install
 
 ```
-$ npm i @elfiner/inquirer-search-list
+$ npm i @elfiner/inquirer-search-list inquirer
 ```
 
 ### Usage
