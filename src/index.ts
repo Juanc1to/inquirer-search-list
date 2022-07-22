@@ -52,6 +52,7 @@ function renderChoices(renderRow: Renderer, choices: Item[], pointer: number) {
 
 class SearchBox extends Base {
 	private pointer: number = 0;
+  private defaultValue: any = undefined;
 	private selected: string | undefined = '';
 	// @ts-ignore
   private done: (state: any) => void;
@@ -65,6 +66,7 @@ class SearchBox extends Base {
 	constructor(...params: Inquirer.Question[]) {
 		super(...params);
 		const { choices, renderRow, filterRow } = this.opt;
+    this.defaultValue = this.opt.default;
 
 		if (!choices) {
 			this.throwParamError('choices');
@@ -73,95 +75,19 @@ class SearchBox extends Base {
   	renderRow ? this.renderRow = renderRow : this.renderRow = defaultRenderRow;
   	filterRow ? this.filterRow = filterRow : this.filterRow = defaultFilterRow;
 
+    const ob = this;
 		this.filterList = this.list = choices
 			.filter(() => true) // fix slice is not a function
-			.map((item, id) => ({ ...item, id }));
+			.map(function (item, id) {
+        if (item.value === ob.defaultValue) {
+          ob.pointer = id;
+        }
+        return {
+          ...item,
+          id,
+        };
+      });
 	}
-
-	render(error?: string) {
-		// Render question
-		var message = this.getQuestion();
-		var bottomContent = "";
-		const tip = chalk.dim("(Press <enter> to submit)");
-
-		// Render choices or answer depending on the state
-		if (this.status === "answered") {
-			message += chalk.cyan(this.selected ? this.selected : '');
-		} else {
-			message += `${tip} ${this.rl.line}`;
-			const choicesStr = renderChoices(this.renderRow, this.filterList, this.pointer);
-			bottomContent = this.paginator.paginate(
-				choicesStr,
-				this.pointer,
-				this.opt.pageSize
-			);
-		}
-
-		if (error) {
-			bottomContent = chalk.red(">> ") + error;
-		}
-
-		this.screen.render(message, bottomContent);
-	}
-
-	filterChoices() {
-		this.filterList = this.list.filter((choice) => this.filterRow(choice, this.rl.line));
-	}
-
-	onDownKey() {
-		const len = this.filterList.length;
-		this.pointer = this.pointer < len - 1 ? this.pointer + 1 : 0;
-		this.render();
-	}
-
-	onUpKey() {
-		const len = this.filterList.length;
-		this.pointer = this.pointer > 0 ? this.pointer - 1 : len - 1;
-		this.render();
-	}
-
-	onAllKey() {
-            this.render();
-	}
-
-	onEnd(state: any) {
-		this.status = "answered";
-                if(this.getCurrentItemName()) {
-                    this.selected = this.getCurrentItemName()
-                }
-		// Rerender prompt (and clean subline error)
-		this.render();
-
-		this.screen.done();
-		this.done(state.value);
-	}
-
-	onError(state: any) {
-		this.render(state.isValid);
-	}
-
-	onKeyPress() {
-		this.pointer = 0;
-		this.filterChoices();
-		this.render();
-	}
-
-	getCurrentItem() {
-    if(this.filterList.length) {
-        return this.filterList[this.pointer]
-    } else {
-		  return this.list[this.pointer]
-    }
-
-    this.filterList = this.list = choices
-      .filter(() => true) // fix slice is not a function
-      .map((item, id) => ({ ...item, id }));
-    // init default value
-    const index = this.filterList.findIndex((e) => {
-      return e.name === this.opt.default;
-    });
-    this.pointer = index > -1 ? index : 0;
-  }
 
   render(error?: string) {
     // Render question
@@ -174,8 +100,16 @@ class SearchBox extends Base {
       message += chalk.cyan(this.selected ? this.selected : '');
     } else {
       message += `${tip} ${this.rl.line}`;
-      const choicesStr = renderChoices(this.filterList, this.pointer);
-      bottomContent = this.paginator.paginate(choicesStr, this.pointer, this.opt.pageSize);
+			const choicesStr = renderChoices(
+        this.renderRow,
+        this.filterList,
+        this.pointer,
+      );
+      bottomContent = this.paginator.paginate(
+        choicesStr,
+        this.pointer,
+        this.opt.pageSize,
+      );
     }
 
     if (error) {
@@ -190,8 +124,20 @@ class SearchBox extends Base {
       extract: (el: Item) => el.name,
     };
 
-    this.filterList = fuzzy.filter(this.rl.line, this.list, options).map((el) => el.original);
-		// 记录输入值
+    // was:
+    //this.filterList = this.list.filter((choice) => this.filterRow(choice, this.rl.line));
+    // TODO: evaluate these two different approaches.
+    const ob = this;
+    this.filterList = fuzzy.filter(this.rl.line, this.list, options).map(
+      function (el, index) {
+        if (el.original.value === ob.defaultValue) {
+          ob.pointer = index;
+        }
+        return el.original;
+      }
+    );
+    // 记录输入值: "record input value"? Ah, I think to allow providing an
+    // input that is not one of the available options.
 		this.userInput = this.rl.line;
   }
 
@@ -237,7 +183,25 @@ class SearchBox extends Base {
     if (this.filterList.length) {
       return this.filterList[this.pointer];
     }
-		return { value: this.userInput, name: this.userInput, short: this.userInput, disabled: false };
+    // other version:
+    //return this.list[this.pointer];
+    // TODO: evaluate these two different approaches
+		return {
+      value: this.userInput,
+      name: this.userInput,
+      short: this.userInput,
+      disabled: false,
+    };
+
+    // TODO: also, what's all this unreachable code?
+    /*this.filterList = this.list = choices
+      .filter(() => true) // fix slice is not a function
+      .map((item, id) => ({ ...item, id }));
+    // init default value
+    const index = this.filterList.findIndex((e) => {
+      return e.name === this.opt.default;
+    });
+    this.pointer = index > -1 ? index : 0;*/
   }
 
   getCurrentItemValue() {
