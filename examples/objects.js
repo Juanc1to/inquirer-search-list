@@ -26,7 +26,8 @@ inquirer
                     return `Whoops, ${answer.name} is not a real topping.`;
                 }
                 return true;
-            }
+            },
+            default: 'Ham',
         }
     ])
     .then(function(answers) {

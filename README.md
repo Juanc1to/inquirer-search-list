@@ -1,6 +1,19 @@
 
 <img width="75px" height="75px" align="right" alt="Inquirer Logo" src="https://raw.githubusercontent.com/robin-rpr/inquirer-search-list/master/inquirer_prompt_readme.svg" title="Inquirer.js"/><img width="75px" height="75px" align="right" alt="Inquirer Logo" src="https://raw.githubusercontent.com/SBoudrias/Inquirer.js/master/assets/inquirer_readme.svg?sanitize=true" title="Inquirer.js"/>
 
+Forked from [robin-rpr/inquirer-search-list](https://github.com/robin-rpr/inquirer-search-list); we'll have more documentation here if/when it diverges substantially from their core work.
+
+<!--
+
+# Overview
+- [inquirer-search-list](#inquirer-search-list)
+    - [Overview](#overview)
+    - [Install](#install)
+    - [Usage](#usage)
+    - [Examples](#examples)
+
+![](preview.gif)
+
 # Inquirer Search List
 This is a simple addon will give you the capabilty to fuzzy filter a list of items to select.
 
@@ -17,15 +30,19 @@ This is a simple addon will give you the capabilty to fuzzy filter a list of ite
 ## Install
 
 ```
-$ npm i inquirer-search-list
+$ npm i @elfiner/inquirer-search-list inquirer
 ```
 
 ## Usage
 
 ```js
-inquirer.registerPrompt('search-list', require('inquirer-search-list'));
+const inquirer = require("inquirer");
+
+inquirer.registerPrompt('search-list', require('@elfiner/inquirer-search-list'));
 ```
 
 ## Examples
 
-See [examples](https://github.com/robin-rpr/inquirer-search-list/blob/master/examples/) for detail.
+See [examples](inquirer-search-list/blob/master/examples/) for details.
+
+-->
